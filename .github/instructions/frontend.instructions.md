@@ -39,5 +39,4 @@ React 18 + TypeScript + Vite 5. No state library, no CSS framework, no component
 ## Don'ts
 
 - No Redux/Zustand/Recoil/React Query — `useChart` is the state layer.
-- No new UI libraries, icon packs, or CSS frameworks unless requested.
 - Don't hardcode `http://localhost:3000` in fetch calls; always use relative `/api/...` paths.

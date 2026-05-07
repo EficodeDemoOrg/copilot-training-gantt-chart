@@ -34,8 +34,3 @@ Keep these boundaries: route handlers must not run SQL directly, and `repo` must
 
 - Local imports must include the `.js` extension (e.g. `import { repo } from './repo.js'`) so the compiled output resolves under Node ESM.
 - Use `import type` for type-only imports from `express` (`type Request`, `type Response`, `type NextFunction`).
-
-## Don'ts
-
-- No new runtime dependencies unless requested. Prefer the standard library and what's already installed (`express`, `cors`, `zod`, `better-sqlite3`).
-- No logging frameworks; `console.error` in the error middleware is enough.

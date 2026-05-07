@@ -21,7 +21,6 @@ Minimal full-stack Gantt chart app used as a basis for developer exercises. Keep
 
 - Run everything from the repo root: `npm install`, `npm run dev` (concurrent backend + frontend), `npm run build`, `npm run start`.
 - Use workspace flags for package-scoped commands: `npm run <script> -w backend` / `-w frontend`. Do not `cd` into a workspace to install dependencies — run `npm install <pkg> -w <workspace>` from the root.
-- Don't add new top-level dependencies, build tools, linters, formatters, test runners, or CI configuration unless explicitly requested. The project deliberately stays minimal.
 - To reset data, delete `backend/data/gantt.db`; the backend recreates schema and a default chart on startup.
 
 ## Implementation guidance
