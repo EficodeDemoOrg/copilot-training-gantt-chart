@@ -1,12 +1,6 @@
-import { db } from './db.js';
+import { db, type Task } from './db.js';
 
-export type Task = {
-  id: number;
-  title: string;
-  startDate: string;
-  endDate: string;
-  position: number;
-};
+export type { Task } from './db.js';
 
 export type Chart = {
   startDate: string;
@@ -14,73 +8,56 @@ export type Chart = {
   tasks: Task[];
 };
 
-type ChartRow = { start_date: string; end_date: string };
-type TaskRow = {
-  id: number;
-  title: string;
-  start_date: string;
-  end_date: string;
-  position: number;
-};
-
-const rowToTask = (r: TaskRow): Task => ({
-  id: r.id,
-  title: r.title,
-  startDate: r.start_date,
-  endDate: r.end_date,
-  position: r.position,
-});
+const sortTasks = (tasks: Task[]): Task[] =>
+  [...tasks].sort((a, b) => a.position - b.position || a.id - b.id);
 
 export const repo = {
   getChart(): Chart {
-    const chart = db.prepare('SELECT start_date, end_date FROM chart WHERE id = 1').get() as ChartRow;
-    const tasks = db
-      .prepare('SELECT id, title, start_date, end_date, position FROM task ORDER BY position ASC, id ASC')
-      .all() as TaskRow[];
     return {
-      startDate: chart.start_date,
-      endDate: chart.end_date,
-      tasks: tasks.map(rowToTask),
+      startDate: db.data.chart.startDate,
+      endDate: db.data.chart.endDate,
+      tasks: sortTasks(db.data.tasks),
     };
   },
 
   updateChart(startDate: string, endDate: string): void {
-    db.prepare('UPDATE chart SET start_date = ?, end_date = ? WHERE id = 1').run(startDate, endDate);
+    db.data.chart.startDate = startDate;
+    db.data.chart.endDate = endDate;
+    db.write();
   },
 
   createTask(title: string, startDate: string, endDate: string): Task {
-    const maxPos = (db.prepare('SELECT COALESCE(MAX(position), -1) AS m FROM task').get() as { m: number }).m;
-    const info = db
-      .prepare('INSERT INTO task (title, start_date, end_date, position) VALUES (?, ?, ?, ?)')
-      .run(title, startDate, endDate, maxPos + 1);
-    const row = db
-      .prepare('SELECT id, title, start_date, end_date, position FROM task WHERE id = ?')
-      .get(info.lastInsertRowid) as TaskRow;
-    return rowToTask(row);
+    const maxPos = db.data.tasks.reduce((m, t) => Math.max(m, t.position), -1);
+    const task: Task = {
+      id: db.data.nextTaskId,
+      title,
+      startDate,
+      endDate,
+      position: maxPos + 1,
+    };
+    db.data.nextTaskId += 1;
+    db.data.tasks.push(task);
+    db.write();
+    return task;
   },
 
   getTask(id: number): Task | undefined {
-    const row = db
-      .prepare('SELECT id, title, start_date, end_date, position FROM task WHERE id = ?')
-      .get(id) as TaskRow | undefined;
-    return row ? rowToTask(row) : undefined;
+    return db.data.tasks.find((t) => t.id === id);
   },
 
   updateTask(id: number, fields: Partial<Pick<Task, 'title' | 'startDate' | 'endDate'>>): Task | undefined {
-    const current = this.getTask(id);
-    if (!current) return undefined;
-    const next = { ...current, ...fields };
-    db.prepare('UPDATE task SET title = ?, start_date = ?, end_date = ? WHERE id = ?').run(
-      next.title,
-      next.startDate,
-      next.endDate,
-      id,
-    );
-    return this.getTask(id);
+    const task = db.data.tasks.find((t) => t.id === id);
+    if (!task) return undefined;
+    Object.assign(task, fields);
+    db.write();
+    return task;
   },
 
   deleteTask(id: number): boolean {
-    const info = db.prepare('DELETE FROM task WHERE id = ?').run(id);
-    return info.changes > 0;
+    const idx = db.data.tasks.findIndex((t) => t.id === id);
+    if (idx === -1) return false;
+    db.data.tasks.splice(idx, 1);
+    db.write();
+    return true;
   },
 };

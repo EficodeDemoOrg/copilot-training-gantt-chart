@@ -7,9 +7,9 @@ Minimal full-stack Gantt chart app used as a basis for developer exercises. Keep
 ## Stack
 
 - **Monorepo**: npm workspaces (`backend`, `frontend`) at the root.
-- **Backend**: Node.js 20+, Express 4, TypeScript (ESM), `better-sqlite3`, `zod`.
+- **Backend**: Node.js 20+, Express 4, TypeScript (ESM), `lowdb`, `zod`.
 - **Frontend**: React 18, TypeScript, Vite 5, `interactjs`.
-- **Storage**: Single SQLite file at `backend/data/gantt.db` (no Docker, no external services).
+- **Storage**: Single JSON file at `backend/data/gantt.json` (no Docker, no external services).
 
 ## Conventions
 
@@ -23,7 +23,7 @@ Minimal full-stack Gantt chart app used as a basis for developer exercises. Keep
 
 - Run everything from the repo root: `npm install`, `npm run dev` (concurrent backend + frontend), `npm run build`, `npm run start`.
 - Use workspace flags for package-scoped commands: `npm run <script> -w backend` / `-w frontend`. Do not `cd` into a workspace to install dependencies — run `npm install <pkg> -w <workspace>` from the root.
-- To reset data, delete `backend/data/gantt.db`; the backend recreates schema and a default chart on startup.
+- To reset data, delete `backend/data/gantt.json`; the backend recreates it with a default chart on startup.
 
 ## Implementation guidance
 

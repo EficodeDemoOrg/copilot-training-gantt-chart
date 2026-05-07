@@ -4,7 +4,7 @@ A minimal full-stack Gantt chart app for planning and tracking tasks across time
 
 - 🎨 **Frontend**: React + TypeScript + Vite
 - ⚙️ **Backend**: Express + TypeScript
-- 💾 **Storage**: SQLite via `better-sqlite3` (single-file DB, no server, no Docker)
+- 💾 **Storage**: JSON file via `lowdb` (single-file DB, no server, no Docker, no native build)
 
 ## ✅ Requirements
 
@@ -38,19 +38,11 @@ npm run test:watch -w backend # watch mode
 
 ## 🗑️ Resetting the data
 
-The database lives at `backend/data/gantt.db`. Delete that file to start fresh; the backend will recreate the schema and a default chart on the next start.
-
-## 🛠️ Troubleshooting `better-sqlite3`
-
-`better-sqlite3` ships prebuilt native binaries for common platforms. If `npm install` fails to find a prebuilt binary for your system, you may need a C/C++ toolchain:
-
-- **macOS**: `xcode-select --install`
-- **Linux**: install `build-essential` (Debian/Ubuntu) or equivalent
-- **Windows**: install the "Desktop development with C++" workload from Visual Studio Build Tools
+The database lives at `backend/data/gantt.json`. Delete that file to start fresh; the backend will recreate it with a default chart on the next start.
 
 ## 📁 Project layout
 
 ```
-backend/   Express + SQLite REST API
+backend/   Express + lowdb REST API
 frontend/  Vite + React UI
 ```

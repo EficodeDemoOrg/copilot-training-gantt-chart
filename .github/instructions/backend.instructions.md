@@ -1,20 +1,20 @@
 ---
-description: "Use when editing the Express + SQLite backend in backend/. Covers route handler style, zod validation, repo/db layering, and ESM import rules."
+description: "Use when editing the Express + lowdb backend in backend/. Covers route handler style, zod validation, repo/db layering, and ESM import rules."
 applyTo: "backend/**"
 ---
 
 # Backend Instructions
 
-Express 4 + TypeScript (ESM) + `better-sqlite3` + `zod`. Single-process, synchronous SQLite — no async DB layer.
+Express 4 + TypeScript (ESM) + `lowdb` + `zod`. Single-process, synchronous JSON-file store — no async DB layer.
 
 ## Layering
 
 - `src/index.ts` — boots the server. Keep it tiny.
 - `src/app.ts` — builds the Express app, declares routes, validates input with `zod`, enforces business rules.
-- `src/repo.ts` — only place that runs SQL. Exposes a typed `repo` object; converts `snake_case` rows to `camelCase` domain types via `rowToTask`.
-- `src/db.ts` — opens the SQLite database, sets pragmas (`journal_mode = WAL`, `foreign_keys = ON`), declares schema with `CREATE TABLE IF NOT EXISTS`, seeds default chart.
+- `src/repo.ts` — only place that touches `db.data`. Exposes a typed `repo` object that returns domain types (`Chart`, `Task`).
+- `src/db.ts` — opens the lowdb JSON file via `JSONFileSyncPreset`, declares the `Data` shape and `Task` type, seeds default chart.
 
-Keep these boundaries: route handlers must not run SQL directly, and `repo` must not know about HTTP.
+Keep these boundaries: route handlers must not read/write `db.data` directly, and `repo` must not know about HTTP.
 
 ## Routes & validation
 
@@ -26,9 +26,9 @@ Keep these boundaries: route handlers must not run SQL directly, and `repo` must
 
 ## Database
 
-- Use synchronous `better-sqlite3` APIs (`db.prepare(...).get/run/all`). Don't introduce async wrappers, ORMs, or migration tools.
-- Schema changes go in `src/db.ts` as additive `CREATE TABLE`/`ALTER TABLE IF NOT EXISTS` statements that work against a fresh DB and an existing one.
-- Column names are `snake_case`; convert at the repo boundary.
+- Use the synchronous lowdb API (`db.data`, `db.write()`). Don't introduce async wrappers, ORMs, or migration tools.
+- Mutations must call `db.write()` before returning so changes are persisted.
+- Schema changes go in the `Data` type in `src/db.ts`. New optional fields read fine from older files; for required fields, extend `defaultData` and consider lazy backfill on read.
 
 ## ESM specifics
 
