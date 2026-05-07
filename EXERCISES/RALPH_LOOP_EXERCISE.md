@@ -48,13 +48,14 @@ Iteration logs are written to `.ralph/iteration-NNN.log`.
 
 1. **Create a feature plan** in `PRD.md` using Copilot in Plan mode. Ask Copilot to plan a couple of new features, using the checkbox task format expected by `PROMPT.md` (`- [ ] Task description`). An example prompt:
    ```markdown
-   Create an implementation plan for the following functionality in #file:PRD.md:
+   Create an implementation plan for the following functionality for the file #file:PRD.md:
+   
    Users are able to create dependencies / predecessors links for the tasks (finish-to-start). Render arrows to indicate the dependencies, prevent invalid drops, and auto-shift dependents when a predecessor moves.
    
    Use a format in PRD.md expected by #file:PROMPT.md . Keep the tasks relatevely small.
    ```
 1. **Save the plan.**
-Once the plan looks good, ask Copilot to save it to `PRD.md` — without implementing anything yet.
+Once the plan looks good, ask Copilot to open it in an editor and copy the contents into `PRD.md`.
 
 1. **Start the Ralph loop.**
    With `PRD.md` ready, kick off the implementation by running the loop script. You can *configure the model and iteration limit* via environment variables.
@@ -80,7 +81,3 @@ The script prints status information to stdout for each iteration.
    ```bash
    npm run dev
    ```
-
-## 🎬 Demo
-
-Want to skip the planning step and jump straight into the loop? Check out the `demo` branch — it includes a ready-made `PRD.md` so you can start the Ralph loop immediately.

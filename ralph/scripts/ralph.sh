@@ -6,22 +6,28 @@
 # Each iteration the agent looks at the current repo state, makes some progress,
 # and exits; the next iteration picks up from where it left off.
 #
-# Usage:
-#   scripts/ralph.sh                       # use ./PROMPT.md, loop forever
-#   scripts/ralph.sh path/to/prompt.md     # use a custom prompt file
-#   MAX_ITER=10 scripts/ralph.sh           # stop after 10 iterations
-#   MODEL=claude-sonnet-4.5 scripts/ralph.sh
+# Usage (run from the repo root):
+#   ralph/scripts/ralph.sh                       # use ralph/PROMPT.md, loop forever
+#   ralph/scripts/ralph.sh path/to/prompt.md     # use a custom prompt file
+#   MAX_ITER=10 ralph/scripts/ralph.sh           # stop after 10 iterations
+#   MODEL=claude-sonnet-4.5 ralph/scripts/ralph.sh
 #
 # Stop conditions (any one ends the loop):
 #   * Ctrl-C
 #   * MAX_ITER iterations reached (if set)
 #   * A file named STOP exists in the repo root
 #
-# Logs from each iteration are written to .ralph/iteration-NNN.log
+# Logs from each iteration are written to ralph/.logs/iteration-NNN.log
 
 set -uo pipefail
 
-PROMPT_FILE="${1:-PROMPT.md}"
+# Resolve the ralph/ directory (parent of this script's directory) so the
+# script can be invoked from anywhere — typically the repo root — and still
+# find PROMPT.md, PRD.md, progress.md, and write logs next to them.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RALPH_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+PROMPT_FILE="${1:-$RALPH_DIR/PROMPT.md}"
 MODEL="${MODEL:-}"
 MAX_ITER="${MAX_ITER:-5}"   # 0 = unlimited
 SLEEP_BETWEEN="${SLEEP_BETWEEN:-2}"
@@ -38,7 +44,8 @@ if [[ ! -f "$PROMPT_FILE" ]]; then
   exit 1
 fi
 
-mkdir -p .ralph
+LOG_DIR="$RALPH_DIR/.logs"
+mkdir -p "$LOG_DIR"
 
 copilot_args=(--allow-all-tools --autopilot)
 if [[ -n "$MODEL" ]]; then
@@ -62,7 +69,7 @@ while :; do
   fi
 
   iter=$((iter + 1))
-  log_file=".ralph/iteration-$(printf '%03d' "$iter").log"
+  log_file="$LOG_DIR/iteration-$(printf '%03d' "$iter").log"
   echo "── iteration $iter ── $(date '+%Y-%m-%d %H:%M:%S') ── log: $log_file"
 
   prompt_text="$(cat "$PROMPT_FILE")"
