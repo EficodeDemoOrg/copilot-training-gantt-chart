@@ -48,11 +48,7 @@ Iteration logs are written to `.ralph/iteration-NNN.log`.
 
 1. **Create a feature plan** in `PRD.md` using Copilot in Plan mode. Ask Copilot to plan a couple of new features, using the checkbox task format expected by `PROMPT.md` (`- [ ] Task description`). An example prompt:
    ```markdown
-   Create an implementation plan for the following functionality for the file #file:PRD.md:
-   
-   Users are able to create dependencies / predecessors links for the tasks (finish-to-start). Render arrows to indicate the dependencies, prevent invalid drops, and auto-shift dependents when a predecessor moves.
-   
-   Use a format in PRD.md expected by #file:PROMPT.md . Keep the tasks relatevely small.
+   Create an implementation plan for a feature that enables users to reorder the tasks in the Gantt chart simply by dragging the rows vertically. Create the plan using the format expected by #file:PROMPT.md 
    ```
 1. **Save the plan.**
 Once the plan looks good, ask Copilot to open it in an editor and copy the contents into `PRD.md`.
