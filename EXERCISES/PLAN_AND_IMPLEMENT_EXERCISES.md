@@ -1,17 +1,17 @@
 # Copilot Advanced Training - Session 2 Exercises 🚀
 
 
-## Plan Mode
+## 🗺️ Plan Mode
 
 In this exercise we use Copilot CLI's **Plan mode** to design a feature, then use the experimental **rubber-duck** agent to get a second-opinion critique on the plan from a different model. Only after revising the plan based on that feedback do we let Copilot implement it.
 
 The feature we'll plan and build is **task reordering by drag-and-drop**.
 
-### Why rubber-duck?
+### 🦆 Why rubber-duck?
 
 The rubber-duck agent (added in Copilot CLI 1.0.42, available behind `/experimental`) reviews the current plan with a *complementary model* from a different model family.
 
-### Steps
+### 📋 Steps
 
 1. Make sure you have the latest Copilot CLI:
     ```bash
@@ -70,21 +70,21 @@ The rubber-duck agent (added in Copilot CLI 1.0.42, available behind `/experimen
     npm test -w backend
     ```
 
-### Reflection
+### 💭 Reflection
 
 - Did the rubber-duck critique surface anything your initial plan missed?
 - How did the revised plan compare to the original in terms of completeness and risk?
 - Was the implementation closer to "first try works" because of the planning round?
 
 
-## Advanced Planning Techniques
+## 🧠 Advanced Planning Techniques
 
-### Ralph
+### 🔁 Ralph
 Next let's build a Ralph loop to iterate over a product requirements document, each iteration performed in a fresh Copilot session.
 - Create a plan for a feature. Specify a sepcific format in the the plan mode that suit Ralph Loops well. 
 - Use a Ralph loop (inlcuded in the repo) to implement the plan.
 
-### OpenSpec
+### 📐 OpenSpec
 - Install OpenSpec
 - Explain that we are using the simple/default workflow of OpenSpec.
 - Ask user to 
