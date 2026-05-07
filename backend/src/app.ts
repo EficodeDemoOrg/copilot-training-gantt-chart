@@ -2,6 +2,7 @@ import express, { type Request, type Response, type NextFunction } from 'express
 import cors from 'cors';
 import { z } from 'zod';
 import { repo } from './repo.js';
+import { withinChart } from './validation.js';
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Expected YYYY-MM-DD');
 
@@ -22,10 +23,6 @@ const updateTaskSchema = z
     endDate: isoDate.optional(),
   })
   .refine((v) => Object.keys(v).length > 0, { message: 'No fields provided' });
-
-function withinChart(start: string, end: string, chartStart: string, chartEnd: string): boolean {
-  return start >= chartStart && end <= chartEnd && start <= end;
-}
 
 export function createApp() {
   const app = express();
