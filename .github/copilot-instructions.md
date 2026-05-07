@@ -2,6 +2,8 @@
 
 Minimal full-stack Gantt chart app used as a basis for developer exercises. Keep changes small, focused, and consistent with existing patterns.
 
+> **Note:** Anything under the `EXERCISES/` directory must always be excluded from the context. Do not read, search, or reference its contents unless the user explicitly requests it.
+
 ## Stack
 
 - **Monorepo**: npm workspaces (`backend`, `frontend`) at the root.
