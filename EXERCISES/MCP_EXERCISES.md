@@ -81,7 +81,7 @@ Now let's try some prompts that use the browser tools provided by the MCP server
 1. Make sure both the Playwright MCP and the exercise application are up and running.
 1. In either Copilot CLI or VS Code (Agent mode), send the following prompt:
     ```
-    Browse to http://localhost:5175/ and add a new task to the Gantt chart. Give the task the name "Playwright was here".
+    Browse to http://localhost:5174/. Edit the timeline of the chart so that it spans from today until three months. Create three tasks: planning (2 weeks), execution (3 weeks), wrap up (1 week). Place them so each task starts after the previous ends.
     ```
 1. Verify that a browser window opens and that Copilot is able to navigate the user interface.
 
