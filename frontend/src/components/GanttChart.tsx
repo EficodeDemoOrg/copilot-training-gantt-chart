@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import type { Chart, Task } from '../types';
 import { addDays, daySpan, isWeekend, parseDate } from '../utils/dates';
 import { TaskBar } from './TaskBar';
@@ -27,15 +27,15 @@ export function GanttChart({ chart, onAddTask, onUpdateTask, onDeleteTask }: Pro
   // After clicking "+", focus & select the newly appended row's title input
   // so the user can immediately type the real name without any popup.
   const lastInputRef = useRef<HTMLInputElement>(null);
-  const [focusLast, setFocusLast] = useState(false);
   const taskCount = chart.tasks.length;
+  const pendingFocusCount = useRef<number | null>(null);
   useEffect(() => {
-    if (focusLast && lastInputRef.current) {
+    if (pendingFocusCount.current !== null && taskCount > pendingFocusCount.current && lastInputRef.current) {
       lastInputRef.current.focus();
       lastInputRef.current.select();
-      setFocusLast(false);
+      pendingFocusCount.current = null;
     }
-  }, [focusLast, taskCount]);
+  }, [taskCount]);
 
   // Group consecutive days by month for the header's month row.
   const months = useMemo(() => {
@@ -55,8 +55,8 @@ export function GanttChart({ chart, onAddTask, onUpdateTask, onDeleteTask }: Pro
   } as React.CSSProperties;
 
   const handleAdd = () => {
+    pendingFocusCount.current = taskCount;
     onAddTask('New task');
-    setFocusLast(true);
   };
 
   return (
