@@ -197,6 +197,7 @@ body {
 .gantt-row {
   display: grid;
   grid-template-columns: var(--label-width) 1fr;
+  min-width: max-content;
 }
 
 .gantt-header {
@@ -365,7 +366,7 @@ body {
 .gantt-row .lane {
   position: relative;
   background-image:
-    linear-gradient(to right, var(--color-border) 1px, transparent 1px);
+    linear-gradient(to left, var(--color-border) 1px, transparent 1px);
 }
 
 /* Task bars: color is supplied per-row via the --task-color CSS variable */
