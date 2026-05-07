@@ -10,3 +10,4 @@ backend/data/*.db-wal
 .env
 .env.local
 .vite/
+.playwright-mcp/
